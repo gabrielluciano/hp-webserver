@@ -36,16 +36,6 @@ public class HttpRequestFactory {
                 """.formatted(path, host, token);
     }
 
-    public static String getWithFoldedHeader(String path, String host) {
-        return """
-                GET %s HTTP/1.1\r
-                Host: %s\r
-                X-Custom-Header: part1\r
-                 part2\r
-                \r
-                """.formatted(path, host);
-    }
-
     public static String browserLikeGet(String path, String host) {
         return """
                 GET %s HTTP/1.1\r
@@ -58,5 +48,45 @@ public class HttpRequestFactory {
                 Upgrade-Insecure-Requests: 1\r
                 \r
                 """.formatted(path, host);
+    }
+
+    public static String missingRequestLine() {
+        return """
+                Host: example.com\r
+                \r
+                """;
+    }
+
+    public static String invalidRequestMethod() {
+        return """
+                INVALID / HTTP/1.1\r
+                Host: example.com\r
+                \r
+                """;
+    }
+
+    public static String missingHostHeader() {
+        return """
+                GET / HTTP/1.1\r
+                Accept: text/html\r
+                \r
+                """;
+    }
+
+    public static String invalidHttpVersion() {
+        return """
+                GET / HTTP/2.0\r
+                Host: example.com\r
+                \r
+                """;
+    }
+
+    public static String invalidHeaderFormat() {
+        return """
+                GET / HTTP/1.1\r
+                Host: example.com\r
+                InvalidHeader\r
+                \r
+                """;
     }
 }

@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class HttpRequest {
-    private String method;
+    private HttpMethod method;
     private String path;
     private String host;
     private String version;
@@ -17,11 +17,11 @@ public class HttpRequest {
         this.headers = new HashMap<>();
     }
 
-    public String getMethod() {
+    public HttpMethod getMethod() {
         return method;
     }
 
-    public void setMethod(String method) {
+    public void setMethod(HttpMethod method) {
         this.method = method;
     }
 
