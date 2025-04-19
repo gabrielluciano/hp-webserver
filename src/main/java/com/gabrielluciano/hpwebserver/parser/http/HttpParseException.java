@@ -7,6 +7,7 @@ public class HttpParseException extends RuntimeException {
     public static final String INVALID_HTTP_VERSION = "Only HTTP/1.1 is supported";
     public static final String INVALID_HEADER_FORMAT = "Invalid header format";
     public static final String UNEXPECTED_ERROR = "Unexpected error occurred while parsing the request";
+    public static final String INVALID_URL_ENCODING = "Invalid URL encoding sequence";
 
     public HttpParseException(String message) {
         super(message);

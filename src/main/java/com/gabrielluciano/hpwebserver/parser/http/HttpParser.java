@@ -3,6 +3,8 @@ package com.gabrielluciano.hpwebserver.parser.http;
 import com.gabrielluciano.hpwebserver.model.HttpMethod;
 import com.gabrielluciano.hpwebserver.model.HttpRequest;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public class HttpParser {
@@ -101,6 +103,12 @@ public class HttpParser {
     }
 
     private void parseRequestUri(HttpRequest httpRequest, String requestUri) {
+        try {
+            requestUri = URLDecoder.decode(requestUri, StandardCharsets.UTF_8);
+        } catch (IllegalArgumentException e) {
+            throw new HttpParseException(HttpParseException.INVALID_URL_ENCODING, e);
+        }
+
         if (!uriContainsQuery(requestUri)) {
             httpRequest.setPath(requestUri);
             return;

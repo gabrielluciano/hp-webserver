@@ -141,4 +141,48 @@ class HttpParserTest {
 
         assertEquals(HttpParseException.INVALID_HEADER_FORMAT, exception.getMessage());
     }
+
+    @Test
+    void testParseGetWithEncodedUrl() {
+        String request = HttpRequestFactory.getWithQuery("/search", "name=John%20Doe&city=New%20York", "example.com");
+        HttpRequest parsedRequest = parser.parse(request);
+
+        assertEquals("/search", parsedRequest.getPath());
+        assertEquals("John Doe", parsedRequest.getQueryParam("name"));
+        assertEquals("New York", parsedRequest.getQueryParam("city"));
+    }
+
+    @Test
+    void testParseGetWithEncodedSpecialChars() {
+        String request = HttpRequestFactory.getWithQuery("/test", "text=%21%40%23%24%25", "example.com");
+        HttpRequest parsedRequest = parser.parse(request);
+
+        assertEquals("/test", parsedRequest.getPath());
+        assertEquals("!@#$%", parsedRequest.getQueryParam("text"));
+    }
+
+    @Test
+    void testParseGetWithEncodedPath() {
+        String request = HttpRequestFactory.simpleGet("/path%20with%20spaces", "example.com");
+        HttpRequest parsedRequest = parser.parse(request);
+
+        assertEquals("/path with spaces", parsedRequest.getPath());
+    }
+
+    @Test
+    void testParseGetWithPlusSign() {
+        String request = HttpRequestFactory.getWithQuery("/search", "name=John+Doe", "example.com");
+        HttpRequest parsedRequest = parser.parse(request);
+
+        assertEquals("/search", parsedRequest.getPath());
+        assertEquals("John Doe", parsedRequest.getQueryParam("name"));
+    }
+
+    @Test
+    void testParseGetWithInvalidEncodedSequence() {
+        String request = HttpRequestFactory.getWithQuery("/test", "value=%2G&other=%", "example.com");
+        HttpParseException exception = assertThrows(HttpParseException.class, () -> parser.parse(request));
+
+        assertEquals(HttpParseException.INVALID_URL_ENCODING, exception.getMessage());
+    }
 }
